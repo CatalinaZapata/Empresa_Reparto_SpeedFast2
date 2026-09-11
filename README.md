@@ -46,7 +46,7 @@ El objetivo es evitar condiciones de carrera y asegurar que cada pedido sea proc
 
 ---
 
-**Repositorio GitHub:** https: https://github.com/CatalinaZapata/Empresa_Reparto_SpeedFast.git |
+**Repositorio GitHub:** https: https://github.com/CatalinaZapata/Empresa_Reparto_SpeedFast2.git |
 **Fecha de entrega:** 14/09/2026
 
 ---
