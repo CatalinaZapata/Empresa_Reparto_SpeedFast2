@@ -1,9 +1,8 @@
 package view;
 
 import controller.PedidoController;
-import model.Estado;
-import model.Pedido;
-import model.TipoPedido;
+import model.*;
+import dao.*;
 import javax.swing.*;
 import java.awt.*;
 

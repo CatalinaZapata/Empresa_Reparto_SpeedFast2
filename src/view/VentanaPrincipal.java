@@ -16,16 +16,18 @@ public class VentanaPrincipal extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
+        JPanel panel = new JPanel(new GridLayout(5, 1, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 60, 10, 60));
 
         JButton btnRegistrar = new JButton("Registrar pedido");
         JButton btnListar = new JButton("Listar pedidos");
+        JButton btnRepartidor = new JButton("Registrar repartidor");
         btnEntrega = new JButton("Asignar repartidor / Iniciar entrega");
         JButton btnCerrar = new JButton("Cerrar sesión");
 
         panel.add(btnRegistrar);
         panel.add(btnListar);
+        panel.add(btnRepartidor);
         panel.add(btnEntrega);
         panel.add(btnCerrar);
 
@@ -41,7 +43,13 @@ public class VentanaPrincipal extends JFrame {
             new VentanaListaPedidos(controller, this);
         });
 
+        btnRepartidor.addActionListener(e -> {
+            setVisible(false);
+            new VentanaRegistroRepartidor(controller, this);
+        });
+
         btnEntrega.addActionListener(e -> iniciarEntregas());
+
         btnCerrar.addActionListener(e -> {
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
@@ -69,8 +77,9 @@ public class VentanaPrincipal extends JFrame {
             try {
                 controller.iniciarEntregas();
                 SwingUtilities.invokeLater(() -> {
-                    JOptionPane.showMessageDialog(this, "Todos los pedidos han sido entregados correctamente.", "Entrega finalizada", JOptionPane.INFORMATION_MESSAGE);
+                    setVisible(false);
                     btnEntrega.setEnabled(true);
+                    new VentanaResultadoEntrega(this);
                 });
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();

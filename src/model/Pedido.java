@@ -32,7 +32,6 @@ public class Pedido implements Comparable<Pedido>{
 
     @Override
     public String toString() {
-        //return "Pedido #" + idPedido + " agregado. Destino: " + direccionEntrega;
         return "Pedido #" + idPedido + " | Tipo: " + tipo + " | Destino: " + direccionEntrega + " | Estado: " + estado;
     }
 
