@@ -12,6 +12,7 @@ Sistema de gestión para la empresa SpeedFast, desarrollado en Java con Swing y 
 Permite gestionar **clientes, repartidores, pedidos y entregas** con operaciones CRUD
 (crear, listar, actualizar y eliminar) y conserva la simulación de reparto concurrente
 (un hilo por repartidor) de la semana anterior.
+
 ---
 ## 🧱 Estructura general del proyecto
 
