@@ -1,39 +1,67 @@
-# 🧠 Sumativa Semana 5 - Desarrollo Orientado a Objetos II
+# 🧠 Sumativa Semana 8 - Desarrollo Orientado a Objetos II
 
 ---
 
 ## 👤 Autor del proyecto
 - **Nombre completo:**  Catalina Zapata
 - **Carrera:** Analista Programador
-- **Nombre del Proyecto:** Empresa_Reparto_SpeedFast RamaSemana5
+- **Nombre del Proyecto:** SpeedFast Rama Semana8
 ---
 ## 📘 Descripción general del proyecto
-Este proyecto corresponde a la evaluación de la Semana 5 de Desarrollo Orientado a Objetos II, desarrollada en Java para la empresa SpeedFast.  
-El sistema simula la gestión concurrente de pedidos mediante múltiples repartidores que trabajan en paralelo.  
-Se implementan `Runnable`, `Thread` y mecanismos de sincronización para controlar el acceso seguro a la zona de carga compartida.   
-Cada repartidor retira un pedido, lo cambia a `EN_REPARTO`, simula su entrega y finalmente lo marca como `ENTREGADO`.  
-El objetivo es evitar condiciones de carrera y asegurar que cada pedido sea procesado por un único repartidor.
-
+Sistema de gestión para la empresa SpeedFast, desarrollado en Java con Swing y MySQL (JDBC).
+Permite gestionar **clientes, repartidores, pedidos y entregas** con operaciones CRUD
+(crear, listar, actualizar y eliminar) y conserva la simulación de reparto concurrente
+(un hilo por repartidor) de la semana anterior.
 ---
 ## 🧱 Estructura general del proyecto
 
 ```plaintext
-📁 Empresa_Reparto_SpeedFast/
+Empresa_Reparto_SpeedFast/
 │
-├── 📁 src/
+├── src/
 │   │
-│   ├── 📁 app/
-│   │   └── 📄 Main.java                    # Punto de entrada y ejecución del sistema.
+│   ├── app/
+│   │   └── Main.java                            # Punto de entrada y ejecución principal del sistema
 │   │
-│   ├── 📁 data/
-│   │   └── 📄 ZonaDeCarga.java             # Recurso compartido para gestionar los pedidos.
+│   ├── model/
+│   │   ├── Cliente.java                         # Representa los clientes registrados en el sistema
+│   │   ├── Pedido.java                          # Representa los pedidos y sus datos
+│   │   ├── Repartidor.java                      # Representa los repartidores y su ejecución concurrente
+│   │   ├── Entrega.java                         # Representa las entregas realizadas
+│   │   ├── Estado.java                          # Define los estados posibles de un pedido
+│   │   └── TipoPedido.java                      # Define los tipos de pedidos disponibles
 │   │
-│   └── 📁 model/
-│       ├── 📄 Estado.java                  # Enum que representa los estados de los pedidos.
-│       ├── 📄 Pedido.java                  # Representa los pedidos del sistema.
-│       └── 📄 Repartidor.java              # Representa a los repartidores y su ejecución concurrente.
+│   ├── dao/
+│   │   ├── ConexionDB.java                      # Gestiona la conexión con la base de datos MySQL
+│   │   ├── Transaccion.java                     # Gestiona las transacciones de la base de datos
+│   │   ├── ClienteDAO.java                      # Gestiona los registros de clientes
+│   │   ├── RepartidorDAO.java                   # Gestiona los registros de repartidores
+│   │   ├── PedidoDAO.java                       # Gestiona los registros de pedidos
+│   │   └── EntregaDAO.java                      # Gestiona los registros de entregas
+│   │
+│   ├── controller/
+│   │   ├── ClienteController.java               # Controla el flujo de clientes
+│   │   ├── RepartidorController.java            # Controla el flujo de repartidores
+│   │   ├── PedidoController.java                # Controla el flujo de pedidos y entregas
+│   │   └── EntregaController.java               # Controla el flujo de entregas
+│   │
+│   ├── data/
+│   │   └── ZonaDeCarga.java                     # Gestiona la cola compartida de pedidos
+│   │
+│   ├── util/
+│   │   └── Validaciones.java                    # Contiene reglas de validación reutilizables
+│   │
+│   └── view/
+│       ├── VentanaPrincipal.java                # Interfaz principal del sistema
+│       ├── VentanaCrud.java                     # Ventana base para operaciones CRUD
+│       ├── VentanaClientes.java                 # Interfaz para gestionar clientes
+│       ├── VentanaRepartidores.java             # Interfaz para gestionar repartidores
+│       ├── VentanaPedidos.java                  # Interfaz para gestionar pedidos
+│       ├── VentanaEntregas.java                 # Interfaz para gestionar entregas
+│       ├── VentanaResultadoEntrega.java         # Muestra los resultados de las entregas
+│       └── ItemCombo.java                       # Representa elementos de listas desplegables
 │
-└── 📄 README.md                             # Descripción e instrucciones del proyecto.
+└── README.md                                    # Documentación general del proyecto
 ```
 
 ---
@@ -47,8 +75,8 @@ El objetivo es evitar condiciones de carrera y asegurar que cada pedido sea proc
 ---
 
 **Repositorio GitHub:** https: https://github.com/CatalinaZapata/Empresa_Reparto_SpeedFast2.git |
-**Fecha de entrega:** 14/09/2026
+**Fecha de entrega:** 05/10/2026
 
 ---
 
-© Duoc UC | Escuela de Informática y Telecomunicaciones | Sumativa Semana 5
+© Duoc UC | Escuela de Informática y Telecomunicaciones | Sumativa Semana 8
