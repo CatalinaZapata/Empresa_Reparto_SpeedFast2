@@ -1,54 +1,50 @@
 package view;
 
-import controller.PedidoController;
+import controller.*;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class VentanaPrincipal extends JFrame {
-    private final PedidoController controller;
-    private JButton btnEntrega;
+    private final PedidoController pedidoController;
+    private final ClienteController clienteController;
+    private final RepartidorController repartidorController;
+    private final EntregaController entregaController;
+    private final JButton btnReparto = new JButton("Iniciar reparto automático");
 
-    public VentanaPrincipal(PedidoController controller) {
-        this.controller = controller;
+    public VentanaPrincipal(PedidoController pedidoController, ClienteController clienteController, RepartidorController repartidorController, EntregaController entregaController) {
+        this.pedidoController = pedidoController;
+        this.clienteController = clienteController;
+        this.repartidorController = repartidorController;
+        this.entregaController = entregaController;
 
         setTitle("SpeedFast - Sistema de Pedidos");
-        setSize(500, 180);
+        setSize(500, 250);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(5, 1, 5, 5));
+        JPanel panel = new JPanel(new GridLayout(6, 1, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 60, 10, 60));
 
-        JButton btnRegistrar = new JButton("Registrar pedido");
-        JButton btnListar = new JButton("Listar pedidos");
-        JButton btnRepartidor = new JButton("Registrar repartidor");
-        btnEntrega = new JButton("Asignar repartidor / Iniciar entrega");
+        JButton btnClientes = new JButton("Gestionar clientes");
+        JButton btnRepartidores = new JButton("Gestionar repartidores");
+        JButton btnPedidos = new JButton("Gestionar pedidos");
+        JButton btnEntregas = new JButton("Gestionar entregas");
         JButton btnCerrar = new JButton("Cerrar sesión");
 
-        panel.add(btnRegistrar);
-        panel.add(btnListar);
-        panel.add(btnRepartidor);
-        panel.add(btnEntrega);
+        panel.add(btnClientes);
+        panel.add(btnRepartidores);
+        panel.add(btnPedidos);
+        panel.add(btnEntregas);
+        panel.add(btnReparto);
         panel.add(btnCerrar);
-
         add(panel);
 
-        btnRegistrar.addActionListener(e -> {
-            setVisible(false);
-            new VentanaRegistroPedido(controller, this);
-        });
-
-        btnListar.addActionListener(e -> {
-            setVisible(false);
-            new VentanaListaPedidos(controller, this);
-        });
-
-        btnRepartidor.addActionListener(e -> {
-            setVisible(false);
-            new VentanaRegistroRepartidor(controller, this);
-        });
-
-        btnEntrega.addActionListener(e -> iniciarEntregas());
+        btnClientes.addActionListener(e -> abrir(() -> new VentanaClientes(clienteController, this)));
+        btnRepartidores.addActionListener(e -> abrir(() -> new VentanaRepartidores(repartidorController, this)));
+        btnPedidos.addActionListener(e -> abrir(() -> new VentanaPedidos(pedidoController, this)));
+        btnEntregas.addActionListener(e -> abrir(() -> new VentanaEntregas(entregaController, this)));
+        btnReparto.addActionListener(e -> iniciarReparto());
 
         btnCerrar.addActionListener(e -> {
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
@@ -58,37 +54,38 @@ public class VentanaPrincipal extends JFrame {
         });
     }
 
-    private void iniciarEntregas() {
-        if (controller.obtenerPedidos().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No hay pedidos registrados.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+    private void abrir(Runnable crearVentana) {
+        setVisible(false);
+        crearVentana.run();
+    }
 
-        boolean hayPendientes = controller.obtenerPedidos().stream().anyMatch(p -> p.getEstado() == model.Estado.PENDIENTE);
+    private void iniciarReparto() {
+        btnReparto.setEnabled(false);
 
-        if (!hayPendientes) {
-            JOptionPane.showMessageDialog( this,"No hay pedidos pendientes.","Aviso",JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        btnEntrega.setEnabled(false);
-
-        Thread hiloEntrega = new Thread(() -> {
+        Thread hiloReparto = new Thread(() -> {
             try {
-                controller.iniciarEntregas();
+                PedidoController.ResumenEntrega resumen = pedidoController.iniciarEntregas();
                 SwingUtilities.invokeLater(() -> {
                     setVisible(false);
-                    btnEntrega.setEnabled(true);
-                    new VentanaResultadoEntrega(this);
+                    new VentanaResultadoEntrega(this, resumen.entregados(), resumen.fallidos());
                 });
-            } catch (InterruptedException ex) {
+            } catch (IllegalStateException e) { // sin repartidores o sin pedidos pendientes
+                avisar(e.getMessage(), JOptionPane.WARNING_MESSAGE);
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                SwingUtilities.invokeLater(() -> {
-                    JOptionPane.showMessageDialog(this, "La entrega fue interrumpida.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                    btnEntrega.setEnabled(true);
-                });
+                avisar("El reparto fue interrumpido.", JOptionPane.WARNING_MESSAGE);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                avisar("Error de base de datos:\n" + e.getMessage(), JOptionPane.ERROR_MESSAGE);
+            } finally {
+                SwingUtilities.invokeLater(() -> btnReparto.setEnabled(true));
             }
-        });
-        hiloEntrega.start();
+        }, "proceso-reparto");
+        hiloReparto.start();
+    }
+
+    private void avisar(String mensaje, int tipo) {
+        SwingUtilities.invokeLater(() ->
+                JOptionPane.showMessageDialog(this, mensaje, tipo == JOptionPane.ERROR_MESSAGE ? "Error" : "Aviso", tipo));
     }
 }

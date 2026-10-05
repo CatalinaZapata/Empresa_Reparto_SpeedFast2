@@ -12,10 +12,7 @@ public class Pedido implements Comparable<Pedido>{
         this.tipo = tipo;
         this.estado = estado;
     }
-
-    public Pedido(int idPedido, String direccionEntrega, Estado estado) {
-        this(idPedido, direccionEntrega, null, estado);
-    }
+    public Pedido(int idPedido, String direccionEntrega, Estado estado) { this(idPedido, direccionEntrega, null, estado);}
 
     public int getIdPedido() { return idPedido;}
     public void setIdPedido(int idPedido) { this.idPedido = idPedido;}
@@ -25,15 +22,10 @@ public class Pedido implements Comparable<Pedido>{
     public void setTipo(TipoPedido tipo) { this.tipo = tipo;}
     public Estado getEstado() { return estado;}
     public void setEstado(Estado estado) { this.estado = estado;}
-
-    public void setEstado(String nuevoEstado){
-        this.estado = Estado.valueOf(nuevoEstado);
-    }
+    public void setEstado(String nuevoEstado){ this.estado = Estado.valueOf(nuevoEstado);}
 
     @Override
-    public String toString() {
-        return "Pedido #" + idPedido + " | Tipo: " + tipo + " | Destino: " + direccionEntrega + " | Estado: " + estado;
-    }
+    public String toString() { return "Pedido #" + idPedido + " | Tipo: " + tipo + " | Destino: " + direccionEntrega + " | Estado: " + estado;}
 
     @Override
     public int compareTo(Pedido pedido) {

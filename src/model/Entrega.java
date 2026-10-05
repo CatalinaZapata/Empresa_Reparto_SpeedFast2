@@ -37,7 +37,5 @@ public class Entrega {
     public void setHora(LocalTime hora) { this.hora = hora;}
 
     @Override
-    public String toString() {
-        return "Entrega #" + id + " | Pedido: " + idPedido + " | Repartidor: " + idRepartidor + " | Fecha: " + fecha + " | Hora: " + hora;
-    }
+    public String toString() { return "Entrega #" + id + " | Pedido: " + idPedido + " | Repartidor: " + idRepartidor + " | Fecha: " + fecha + " | Hora: " + hora;}
 }

@@ -7,7 +7,7 @@ import java.awt.*;
 public class VentanaResultadoEntrega extends JFrame{
     private final VentanaPrincipal principal;
 
-    public VentanaResultadoEntrega(VentanaPrincipal principal) {
+    public VentanaResultadoEntrega(VentanaPrincipal principal, int entregados, int fallidos) {
         this.principal = principal;
 
         setTitle("Entrega finalizada");
@@ -19,7 +19,11 @@ public class VentanaResultadoEntrega extends JFrame{
         panelPrincipal.setBorder(new EmptyBorder(25, 30, 25, 30));
         JLabel titulo = new JLabel("Proceso de entrega finalizado", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 20));
-        JLabel mensaje = new JLabel( "<html><div style='text-align: center;'>" + "Los pedidos pendientes fueron repartidos<br>" + "y entregados correctamente." + "</div></html>", SwingConstants.CENTER);
+        String detalle = "Pedidos entregados: " + entregados;
+        if (fallidos > 0) {
+            detalle += "<br>Pedidos con error (siguen PENDIENTE): " + fallidos + "<br>Revise la consola para ver el detalle.";
+        }
+        JLabel mensaje = new JLabel("<html><div style='text-align: center;'>" + detalle + "</div></html>", SwingConstants.CENTER);
         mensaje.setFont(new Font("Arial", Font.PLAIN, 14));
         JPanel panelCentro = new JPanel(new BorderLayout());
         panelCentro.add(mensaje, BorderLayout.CENTER);
